@@ -1,19 +1,20 @@
-import { Router } from "express"
+import {Router} from "express"
+import {getUser, getUsers} from "../services/userService.js";
+
 const users = Router()
 
-
 users.get('/', async (request, response) => {
-let users = await getUsers()
-//mangler response til pug med users 
+  const allUsers = await getUsers()
+  response.json(allUsers)
 })
 
 users.get('/add', (request, response) => {
-    response.render('add')
+  response.render('add')
 })
 
 users.get('/:id', async (request, response) => {
   const user = await getUser(request.params.id)
-  response.send(user)
+  response.json(user)
 })
 
 users.put('/:id', (request, response) => {
@@ -26,5 +27,5 @@ users.post('/', async (request, response) => {
   response.redirect('/users')
 })
 
-export {users}
+export { users }
 

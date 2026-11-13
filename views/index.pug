@@ -1,0 +1,15 @@
+//- index.pug
+doctype html
+html(lang="da")
+    head
+        title Chat
+        link(rel="stylesheet", href="/css/style.css")
+    body
+        h1 Chats
+        //- … chatlisten …
+        h2 Users
+            ul
+                each user in users
+                    li
+                    a(href="/users/" + user.id)= user.username
+        script(src="/js/main.js")

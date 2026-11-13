@@ -13,14 +13,13 @@ const userConverter = {
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
-        const id = snapshot.id;
-        return new User(id, data.username, data.password, data.accessLevel, data.dateCreated);
+        return new User(data.username, data.password, data.accessLevel, snapshot.id, data.dateCreated.toDate());
 
     }
 }
 const userCollection = collection(db, "users").withConverter(userConverter);
 
-export async function addUser(user) {
+export async function createUser(user) {
     const ref = await addDoc(userCollection, user);
     return ref.id;
 }
