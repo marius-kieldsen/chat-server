@@ -16,11 +16,6 @@ users.get('/:id', async (request, response) => {
   response.send(user)
 })
 
-users.post('/:id/delete', async (request, response) => {
-  await deleteUser(request.params.id)
-  response.redirect('/users')
-})
-
 users.put('/:id', (request, response) => {
 
 })
@@ -31,5 +26,5 @@ users.post('/', async (request, response) => {
   response.redirect('/users')
 })
 
-export {getUsers}
+export {users}
 

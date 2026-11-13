@@ -1,5 +1,5 @@
 import express, {request, response} from 'express'
-import { users } from './routes/getUsers'
+import { users } from './routes/getUsers.js'
 
 const app = express()
 app.set('view engine', 'pug')

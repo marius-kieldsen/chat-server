@@ -3,8 +3,8 @@ export class user {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.accessLevel = accessLevel;
-        this.dateCreated = Date.now();
+        this.accessLevel = accessLevel
+        this.dateCreated = Date.now()
     }
 }
 
