@@ -7,3 +7,4 @@ export class user {
         this.dateCreated = Date.now();
     }
 }
+
