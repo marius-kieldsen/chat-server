@@ -1,6 +1,7 @@
 import express from 'express'
 import {users} from './routes/getUsers.js'
-import {getUsers} from "./services/userService.js";
+import {getUsers} from "./services/userService.js"
+import { chat } from './routes/chat.js'
 
 const app = express()
 
@@ -16,4 +17,14 @@ app.get('/', async (request, response) => {
 })
 
 app.use('/users', users)
+
+
+app.use('/chats',chat)
+
+
+
+
+
+
+
 app.listen(8000, () => console.log('Port åben: http://localhost:8000' ))
