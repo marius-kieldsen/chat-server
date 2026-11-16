@@ -1,5 +1,5 @@
 import {addDoc, collection, deleteDoc, doc, getDoc, getDocs} from 'firebase/firestore'
-import {db} from "../config/firebase"
+import {db} from "../config/firebase.js"
 
 
 const chatConverter = {
