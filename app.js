@@ -3,6 +3,7 @@ import {users} from './routes/getUsers.js'
 import {getUserByUsername, getUsers} from "./services/userService.js";
 import session from 'express-session'
 import {verifyPassword} from "./services/authService.js";
+import {chat} from './routes/chat.js'
 
 const app = express()
 
@@ -39,6 +40,16 @@ app.post('/login', async (request, response) => {
 })
 
 app.use('/users', users)
+
+
+app.use('/chats',chat)
+
+
+
+
+
+
+
 
 
 
