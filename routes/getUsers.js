@@ -1,5 +1,7 @@
 import {Router} from "express"
-import {getUser, getUsers} from "../services/userService.js";
+import {createUser, getUser, getUserByUsername, getUsers} from "../services/userService.js";
+import {User} from "../models/User.js";
+import {hashPassword} from "../services/authService.js";
 
 const users = Router()
 
@@ -22,9 +24,14 @@ users.put('/:id', (request, response) => {
 })
 
 users.post('/', async (request, response) => {
-  const user = new User(request.body.username, request.body.type)
-  await addUser(user) 
-  response.redirect('/users')
+  const { username, password, level } = request.body
+
+  if (await getUserByUsername(username)) {
+    return response.status(409).send({ ok: false, error: 'Brugernavn findes allerede.'})
+  }
+
+  await createUser(new User(username, hashPassword(password), level))
+  response.status(201).send({ ok: true })
 })
 
 export { users }
