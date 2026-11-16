@@ -1,4 +1,4 @@
-import {addDoc, collection, deleteDoc, doc, getDoc, getDocs} from 'firebase/firestore'
+import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where} from 'firebase/firestore'
 import {db} from "../config/firebase.js";
 import {User} from "../models/User.js";
 
@@ -36,4 +36,12 @@ export async function deleteUser(id) {
 export async function getUsers() {
     const userQuerySnapshot = await getDocs(userCollection)
     return userQuerySnapshot.docs.map(doc => doc.data())
+}
+
+export async function getUserByUsername(username) {
+    const q = query(userCollection, where("username", "==", username))
+    const snapshot = await getDocs(q)
+    if (snapshot.empty) return null
+
+    return snapshot.docs[0].data()
 }
