@@ -42,4 +42,4 @@ await deleteChat(request.params.id)
 response.sendStatus(204)
 })
 
-export {chat} 
+export {chat}
