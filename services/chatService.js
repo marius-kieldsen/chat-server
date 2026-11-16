@@ -16,7 +16,7 @@ const chatConverter = {
         return new Chat(data.name, data.owner, data.dateCreated.toDate())
     }
 }
-const chatCollection = collection(db, collection(db,"chats").withConverter(chatConverter))
+const chatCollection = collection(db,"chats").withConverter(chatConverter)
 
 export async function getChats() {
     const snapshot = await getDocs(chatCollection)
