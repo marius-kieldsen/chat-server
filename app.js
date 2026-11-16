@@ -1,5 +1,6 @@
 import express from 'express'
 import {users} from './routes/getUsers.js'
+import {getUsers} from "./services/userService.js";
 
 const app = express()
 
@@ -8,10 +9,11 @@ app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.send('Forsiden')
+
+app.get('/', async (request, response) => {
+    const allUsers = await getUsers()
+    response.render('index', { users: allUsers })
 })
 
 app.use('/users', users)
-
 app.listen(8000, () => console.log('Port åben: http://localhost:8000' ))
