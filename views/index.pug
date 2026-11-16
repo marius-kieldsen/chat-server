@@ -5,10 +5,26 @@ html(lang="da")
         title Chat
         link(rel="stylesheet", href="/css/style.css")
     body
-        h1 Chats
+        h1 Chat Server
         //- … chatlisten …
         h2 Users
             ul
                 each user in users
                     li #{user.username} (#{user.id})
-        script(src="/js/main.js")
+
+        if user
+            p Logget ind som #{user.username}
+        else
+            form#login-form
+                input#username(type="text" placeholder="Brugernavn" required)
+                input#password(type="password" placeholder="Adgangskode" required)
+                button(type="submit") Log ind
+            p#fejl
+
+            form#opret-form
+                input#opretUsername(type="text" placeholder="Brugernavn" required)
+                input#opretPassword(type="password" placeholder="Adgangskode" required)
+                input#opretLevel(type="range" min="1" max="3" step="1" value="1" required)
+                button(type="submit") Opret
+            p#fejl
+    script(src="/js/main.js")
