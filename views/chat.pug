@@ -4,11 +4,14 @@ html(lang="en")
     head
         title chat oversigt 
         link(rel="stylesheet", href="/css/style.css")
-    body 
-    h1 Chat oversigt 
-    nav  
-        ul 
-            li: a(href="chats/new") Opret ny chat  
+    body
+        h1 Chat oversigt
+            nav
+                ul
+                    if level>=2 {
+            li: a(href="chats/new") Opret ny chat
             li: a(href="/message") Se dine beskeder
+                    }
+                    if level >=3
             li: a(href="/users") Administrer brugere
             li: a(href="/logout") Log ud

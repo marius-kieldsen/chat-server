@@ -1,5 +1,5 @@
 
-class Message {
+export class Message {
     constructor(id, message, owner, chatId, createDate = new Date()) {
         this.id = id
         this.message = message
