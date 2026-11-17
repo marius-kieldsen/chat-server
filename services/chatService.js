@@ -1,5 +1,6 @@
 import {addDoc, collection, deleteDoc, doc, getDoc, getDocs} from 'firebase/firestore'
 import {db} from "../config/firebase.js"
+import {Chat} from "../models/Chat.js"
 
 
 const chatConverter = {
@@ -13,7 +14,7 @@ const chatConverter = {
 
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options)
-        return new Chat(data.name, data.owner, data.dateCreated.toDate())
+        return new Chat(snapshot.id, data.name, data.owner, data.dateCreated.toDate())
     }
 }
 const chatCollection = collection(db,"chats").withConverter(chatConverter)

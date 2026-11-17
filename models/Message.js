@@ -5,6 +5,7 @@ class Message {
         this.message = message
         this.createDate = Date.now
         this.owner = owner
-        //chattilhørsforhold
+        //chattilhørsforhold --> chatID
+
     }
 }

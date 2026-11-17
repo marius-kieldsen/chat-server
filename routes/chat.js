@@ -1,27 +1,27 @@
 import {Router} from "express"
-import {createChat, deleteChat} from "../services/chatService.js"
+import {getChat, createChat, deleteChat} from "../services/chatService.js"
 
 
 const chat = Router()
 
 chat.get('/', async (request, response) => {
 //alle chats
-const allChats = await chat()
+const allChats = await getChat()
 response.json(allChats)
 })
 
 chat.get('/:id', async (request, response) => {
 //en chat
-const chat = await chat(request.params.id)
-if(!chat) return response.status(404)
-response.json(chat)
+const oneChat = await getChat(request.params.id)
+if(!oneChat) return response.sendStatus(404)
+response.json(oneChat)
 })
 
-chat.get('/:id/message', async (request, response) => {
+chat.get('/:id/messages', async (request, response) => {
 //beskeder i chat
 })
 
-chat.get('/:id/message/messageID', async (request, response) => {
+chat.get('/:id/message/:messageID', async (request, response) => {
 //en besked
 })
 
