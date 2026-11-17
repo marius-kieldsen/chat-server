@@ -1,5 +1,5 @@
 import express from 'express'
-import {users} from './routes/getUsers.js'
+import {users} from './routes/users.js'
 import {getUserByUsername, getUsers} from "./services/userService.js";
 import session from 'express-session'
 import {verifyPassword} from "./services/authService.js";
