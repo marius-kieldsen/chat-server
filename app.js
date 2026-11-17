@@ -4,6 +4,7 @@ import {getUserByUsername, getUsers} from "./services/userService.js";
 import session from 'express-session'
 import {verifyPassword} from "./services/authService.js";
 import {chat} from './routes/chat.js'
+import {getChats} from"./services/chatService.js"
 
 const app = express()
 
@@ -18,8 +19,12 @@ app.use(session({
 }))
 
 app.get('/', async (request, response) => {
+if (!request.session.user)
     const allUsers = await getUsers()
-    response.render('index', { users: allUsers })
+    return response.render('index', { users: allUsers })
+    }
+    const chats = await getChats()
+    response.render('chat', {chats,user:request.session.user})
 })
 
 app.get('/login', async ( request, response) => {
