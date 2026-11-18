@@ -1,14 +1,46 @@
- 
 doctype html
-html(lang="en")
+html(lang="da")
     head
-        title chat oversigt 
+        title Chat oversigt
         link(rel="stylesheet", href="/css/style.css")
-    body 
-    h1 Chat oversigt 
-    nav  
-        ul 
-            li: a(href="chats/new") Opret ny chat  
-            li: a(href="/message") Se dine beskeder
-            li: a(href="/users") Administrer brugere
-            li: a(href="/logout") Log ud
+    body
+        - const level = user ? Number(user.accessLevel) : 0
+        h1 Chat oversigt
+
+        if user
+            p Logget ind som #{user.username} (niveau #{level})
+            nav
+                ul
+                    if level >= 2
+                        li: button#opret-knap(type="button") Opret ny chat
+                    li: a(href=`/users/${user.id}/messages`) Se dine beskeder
+                    if level >= 3
+                        li: a(href="/users") Administrer brugere
+                    li: a(href="/logout") Log ud
+        else
+            form#login-form
+                input#username(type="text" placeholder="Brugernavn" required)
+                input#password(type="password" placeholder="Kodeord" required)
+                button(type="submit") Log ind
+
+        if level >= 2
+            form#opret-chat-form(hidden)
+                input#chat-navn(type="text" placeholder="Navn på chat" required)
+                button(type="submit") Opret
+
+        ul#chat-liste
+            each chat in chats
+                li(data-id=chat.id)
+                    a(href=`/chats/${chat.id}`)= chat.name
+                    if level >= 3 || (level === 2 && chat.owner === user.id)
+                        button.ret(type="button") Ret
+                        button.slet(type="button") Slet
+
+        if level >= 3
+            h2 Brugere
+            ul
+                each u in users
+                    li #{u.username} (niveau #{u.accessLevel})
+
+        script(src="/js/main.js")
+        script(src="/js/chat.js")
