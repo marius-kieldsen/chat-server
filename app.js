@@ -1,9 +1,9 @@
 import express from 'express'
-import {users} from './routes/users.js'
+import {userRoutes} from './routes/userRoutes.js'
 import {getUserByUsername, getUsers} from "./services/userService.js";
 import session from 'express-session'
 import {verifyPassword} from "./services/authService.js";
-import {chat} from './routes/chat.js'
+import {chatRoutes} from './routes/chatRoutes.js'
 import {getChats} from "./services/chatService.js"
 
 const app = express()
@@ -23,24 +23,10 @@ app.use((request, response, next) => {
 })
 
 app.get('/', async (request, response) => {
-if (!request.session.user) {
-    const allUsers = await getUsers()
-    return response.render('index', { users: allUsers })
-    }
     const chats = await getChats()
-    response.render('chat', {chats,user:request.session.user})
-})
+    const users = request.session.user?.accessLevel === 3 ? await getUsers() : []
 
-// MIDLERTIDIG – slet før aflevering
-app.get('/test-chat', (request, response) => {
-    const level = Number(request.query.level) || 0
-    const user = level ? { id: 'u1', username: 'test', accessLevel: level } : undefined
-    const chats = [
-        { id: 'c1', name: 'Julefrokost', owner: 'u1' },   // ejes af test-brugeren
-        { id: 'c2', name: 'Sommerfest', owner: 'u9' }     // ejes af en anden
-    ]
-    const users = [{ username: 'admin', accessLevel: 3 }]
-    response.render('chat', { chats, user, users })
+    response.render('index', { chats, users })
 })
 
 app.post('/login', async (request, response) => {
@@ -59,14 +45,9 @@ app.post('/logout', (request, response) => {
     request.session.destroy(() => response.sendStatus(200))
 })
 
-app.use('/users', users)
+app.use('/users', userRoutes)
 
-app.use('/chats',chat)
-
-
-
-
-
+app.use('/chats',chatRoutes)
 
 
 app.listen(8000, () => console.log('Port åben: http://localhost:8000' ))
