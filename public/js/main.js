@@ -95,10 +95,50 @@ if (opretChatForm) {
 
         if (svar.ok) {
             console.log("Chat created!")
-            location.reload()
+
+            const chat = await svar.json()
+            const li = document.createElement('li')
+            li.dataset.id = chat.id
+
+            const a = document.createElement('a')
+            a.href = '/chats/' + chat.id
+            a.textContent = chat.name
+
+            const slet = document.createElement('button')
+            slet.className = 'slet'
+            slet.textContent = 'slet'
+            li.append(a, slet)
+
+            document.querySelector('#chat-list').append(li)
+
+            opretChatForm.reset()
+            opretChatForm.close()
         } else {
             const data = await svar.json()
             alert(data.error)
         }
     })
 }
+
+document.querySelector('#chat-list').addEventListener('click', async e => {
+    if (!e.target.matches('.slet')) return
+    if (!confirm('Er du sikker på at du vil slette denne chat?')) return
+
+    const li = e.target.closest('li')
+
+    const svar = await fetch('/chats/' + li.dataset.id, {method: 'DELETE'})
+
+    const fejlbeskeder= {
+        401: 'Du skal være logget ind for at slette en chat.',
+        403: 'Du har ikke tilladelse til at slette denne chat.',
+        404: 'Chat ikke fundet.',
+        default: 'Noget gik galt.'
+    }
+
+    if (svar.ok) {
+        li.remove()
+    } else {
+        alert(fejlbeskeder[svar.status] ?? fejlbeskeder.default)
+    }
+})
+
