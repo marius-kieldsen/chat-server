@@ -1,18 +1,21 @@
 import crypto from 'crypto'
 import fs from 'node:fs'
 
+if (!fs.existsSync('./privat_noegle.pem')) {
+    const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
+        privateKeyEncoding: { type: 'pkcs1', format: 'pem' },
+    })
+    fs.writeFileSync('./offentlig_noegle.pem', publicKey)
+    fs.writeFileSync('./privat_noegle.pem', privateKey)
+}
 
+const publicKey = fs.readFileSync('./offentlig_noegle.pem', 'utf-8')
+const privateKey = fs.readFileSync('./privat_noegle.pem', 'utf-8')
 
-crypto.generateKeyPair('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
-    privateKeyEncoding: { type: 'pkcs1', format: 'pem' },
-}, (err, publicKey, privateKey) => {
-    if (err) return console.error('Error generating keys:', err)
+const encrypted = crypto.publicEncrypt(publicKey, Buffer.from('Sensitive Data'))
+console.log('Encrypted:', encrypted.toString('base64'))
 
-    const encrypted = crypto.publicEncrypt(publicKey, Buffer.from('Sensitive Data'))
-    console.log('Encrypted with public key:', encrypted.toString('base64'))
-
-    const decrypted = crypto.privateDecrypt(privateKey, encrypted)
-    console.log('Decrypted with private key:', decrypted.toString())
-})
+const decrypted = crypto.privateDecrypt(privateKey, encrypted)
+console.log('Decrypted:', decrypted.toString())
