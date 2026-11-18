@@ -14,7 +14,7 @@ const chatConverter = {
 
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options)
-        return new Chat(snapshot.id, data.name, data.owner, data.dateCreated.toDate())
+        return new Chat(data.name, data.owner, snapshot.id, data.dateCreated.toDate())
     }
 }
 const chatCollection = collection(db,"chats").withConverter(chatConverter)

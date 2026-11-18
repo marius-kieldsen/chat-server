@@ -1,11 +1,11 @@
 
 
 export class Chat {
-    constructor(id, name, owner, dateCreated = new Date()) {
-        this.id = id    
+    constructor(name, owner, id = null, dateCreated = new Date()) {
         this.name = name
-        this.dateCreated = dateCreated
         this.owner = owner
+        this.id = id
+        this.dateCreated = dateCreated
         this.messages = []
     }
 }
