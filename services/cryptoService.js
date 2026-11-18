@@ -1,10 +1,18 @@
 import crypto from 'crypto'
+import fs from 'node:fs'
 
 
-const algorithm ='aes-256-cbc'
-const key = crypto.randomBytes(32)  // gem key som fast nøgle så ingen tidligere misset beskeder
 
-function encrypt(text) {
-    const iv = crypto.randomBytes(16)
-    // resterende kode her
-}
+crypto.generateKeyPair('rsa', {
+    modulusLength: 2048,
+    publicKeyEncoding: { type: 'pkcs1', format: 'pem' },
+    privateKeyEncoding: { type: 'pkcs1', format: 'pem' },
+}, (err, publicKey, privateKey) => {
+    if (err) return console.error('Error generating keys:', err)
+
+    const encrypted = crypto.publicEncrypt(publicKey, Buffer.from('Sensitive Data'))
+    console.log('Encrypted with public key:', encrypted.toString('base64'))
+
+    const decrypted = crypto.privateDecrypt(privateKey, encrypted)
+    console.log('Decrypted with private key:', decrypted.toString())
+})
