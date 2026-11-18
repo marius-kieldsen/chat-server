@@ -14,13 +14,12 @@ html(lang="da")
                     input#chatName(type="text" placeholder="Navn på chat" required)
                     button(type="submit") Opret chat
                     button#luk-dialog(type="button") Annuler
-        ul
+        ul#chat-list
             each chat in chats
-                li
+                li(data-id=chat.id)
                     a(href="/chats/" + chat.id)= chat.name
 
-                    if user && user.accessLevel >= 2 && (chat.owner === user.id || user.accessLevel === 3)
-                        button.rediger Rediger
+                    if user && user.accessLevel >= 2 && (chat.owner === user.id || user.accessLevel > 2)
                         button.slet Slet
 
         if user
