@@ -12,8 +12,7 @@ const messageConverter = {
             chatId: message.chatId,
             createDate: message.createDate
         }
-    }
-}
+    },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options)
         return new Message(snapshot.id, decrypt(data.message), data.owner, data.chatId, data.createDate.toDate())
