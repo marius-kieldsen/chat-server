@@ -16,6 +16,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
 }))
+app.use((request, response, next) => {
+    response.locals.user = request.session.user
+    next()
+})
 
 app.get('/', async (request, response) => {
     const allUsers = await getUsers()
@@ -28,32 +32,23 @@ app.get('/login', async ( request, response) => {
 
 app.post('/login', async (request, response) => {
     const { username, password } = request.body
-    const user = getUserByUsername(username)
+    const user = await getUserByUsername(username)
 
-    if (user && verifyPassword(password, user.password)) {
-        request.session.user = { id: user.id, username: user.username, accessLevel: user.accessLevel }
-        response.send({ ok: true })
-        return response.redirect('/')
-    } else {
-        response.send({ ok: false })
+    if (!user && !verifyPassword(password, user.password)) {
+        return response.status(401).json({ error: "Forkert brugernavn eller adgangskode" })
     }
+
+    request.session.user = { id: user.id, username: user.username, accessLevel: user.accessLevel }
+    response.sendStatus(200)
+})
+
+app.post('/logout', (req, res) => {
+    req.session.destroy(() => res.sendStatus(200))
 })
 
 app.use('/users', users)
 
 app.use('/chats',chat)
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
