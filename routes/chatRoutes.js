@@ -2,6 +2,14 @@ import {Router} from "express"
 import {createChat, deleteChat, getChat, getChats} from "../services/chatService.js"
 import {Chat} from "../models/Chat.js"
 
+function requiresLogin(request, response, next) {
+    if (!request.session.user) return response.sendStatus(401)
+    next()
+}
+
+function canEdit(user, chat) {
+    return user.accessLevel === 3 || (user.accessLevel >= 2 && chat.owner === user.id)
+}
 
 const chatRoutes = Router()
 
@@ -33,31 +41,18 @@ chatRoutes.post('/', async (request, response) => {
 
     const { chatName } = request.body
     const owner = request.session.user.id
-
-    await createChat(new Chat(chatName, owner))
-    response.sendStatus(201)
+    const chat = new Chat(chatName, owner)
+    chat.id = await createChat(chat)
+    response.status(201).json(chat)
 })
 
-chatRoutes.put('/:id', async (request, response) => {
-//ret chatRoutes
-})
+chatRoutes.delete('/:id', requiresLogin, async (request, response) => {
+    const chat = await getChat(request.params.id)
+    if (!chat) return response.sendStatus(404)
+    if (!canEdit(request.session.user, chat)) return response.sendStatus(403)
 
-chatRoutes.delete('/:id', async (request, response) => {
-    const user = request.session.user
-    if (!user) return response.sendStatus(401)
-
-    const oneChat = await getChat(request.params.id)
-    if (!oneChat) return response.sendStatus(404)
-
-    const level = Number(user.accessLevel)
-    const ejerSelv = oneChat.owner === user.id
-
-    if (level >= 3 || (level === 2 && ejerSelv)) {
-        await deleteChat(request.params.id)
-        return response.sendStatus(204)
-    }
-
-    response.sendStatus(403)
+    await deleteChat(request.params.id)
+    return response.sendStatus(204)
 })
 
 export {chatRoutes}
