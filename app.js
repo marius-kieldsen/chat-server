@@ -26,7 +26,7 @@ app.get('/', async (request, response) => {
     const chats = await getChats()
     const users = request.session.user?.accessLevel === 3 ? await getUsers() : []
 
-    response.render('index', { chats, users })
+    response.render('index', { chats, users, user: request.session.user })
 })
 
 app.post('/login', async (request, response) => {
