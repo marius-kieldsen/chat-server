@@ -1,7 +1,7 @@
 import {Router} from "express"
 import {createChat, deleteChat, getChat, getChats} from "../services/chatService.js"
 import {Chat} from "../models/Chat.js"
-import {getMessage, getMessagesbyChat} from "--/services/messageService.js"
+import {createMessage, getMessage, getMessagesbyChat} from "../services/messageService.js"
 
 function requiresLogin(request, response, next) {
     if (!request.session.user) return response.sendStatus(401)
@@ -11,7 +11,6 @@ function requiresLogin(request, response, next) {
 function canEdit(user, chat) {
     return user.accessLevel === 3 || (user.accessLevel >= 2 && chat.owner === user.id)
 }
-import {createMessage, getMessage, getMessagesbyChat} from "../services/messageService.js"
 import {Message} from "../models/Message.js"
 
 const chatRoutes = Router()
@@ -31,14 +30,14 @@ response.json(oneChat)
 
 chatRoutes.get('/:id/messages', async (request, response) => {
 //beskeder i chatRoutes
-const messages = await getMessagesbyChat()
-return response.json(messages.filter(m => m.chatId === request.params.id))
+const messages = await getMessagesbyChat(request.params.id)
+response.json(messages)
 })
 
 chatRoutes.get('/:id/messages/:messageID', async (request, response) => {
 //en besked
 const message = await getMessage(request.params.messageID)
-response.json(messages)
+response.json(message)
 })
 
 chatRoutes.post('/', async (request, response) => {
