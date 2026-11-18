@@ -1,7 +1,8 @@
 import {Router} from "express"
 import {createChat, deleteChat, getChat, getChats} from "../services/chatService.js"
 import {Chat} from "../models/Chat.js"
-
+import {createMessage, getMessage, getMessagesbyChat} from "--/services/messageService.js"
+import {Message} from "../models/Message.js"
 
 const chatRoutes = Router()
 
@@ -20,7 +21,7 @@ response.json(oneChat)
 
 chatRoutes.get('/:id/messages', async (request, response) => {
 //beskeder i chatRoutes
-const messages = await getMessages()
+const messages = await getMessagesbyChat()
 return response.json(message.filter(m => m.chatId === request.params.id))
 })
 
