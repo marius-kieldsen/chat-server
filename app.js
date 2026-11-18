@@ -19,7 +19,7 @@ app.use(session({
 }))
 
 app.get('/', async (request, response) => {
-if (!request.session.user)
+if (!request.session.user) {
     const allUsers = await getUsers()
     return response.render('index', { users: allUsers })
     }
@@ -50,7 +50,17 @@ app.use('/chats',chat)
 
 
 
-
+// MIDLERTIDIG – slet før aflevering
+app.get('/test-chat', (request, response) => {
+    const level = Number(request.query.level) || 0
+    const user = level ? { id: 'u1', username: 'test', accessLevel: level } : undefined
+    const chats = [
+        { id: 'c1', name: 'Julefrokost', owner: 'u1' },   // ejes af test-brugeren
+        { id: 'c2', name: 'Sommerfest', owner: 'u9' }     // ejes af en anden
+    ]
+    const users = [{ username: 'admin', accessLevel: 3 }]
+    response.render('chat', { chats, user, users })
+})
 
 
 

@@ -43,9 +43,21 @@ chat.put('/:id', async (request, response) => {
 })
 
 chat.delete('/:id', async (request, response) => {
-// sæt if sætning ift level bruger må slette
-await deleteChat(request.params.id)
-response.sendStatus(204)
+    const user = request.session.user
+    if (!user) return response.sendStatus(401)
+
+    const oneChat = await getChat(request.params.id)
+    if (!oneChat) return response.sendStatus(404)
+
+    const level = Number(user.accessLevel)
+    const ejerSelv = oneChat.owner === user.id
+
+    if (level >= 3 || (level === 2 && ejerSelv)) {
+        await deleteChat(request.params.id)
+        return response.sendStatus(204)
+    }
+
+    response.sendStatus(403)
 })
 
 export {chat}
