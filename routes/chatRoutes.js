@@ -1,6 +1,7 @@
 import {Router} from "express"
 import {createChat, deleteChat, getChat, getChats} from "../services/chatService.js"
 import {Chat} from "../models/Chat.js"
+import {getMessage, getMessagesbyChat} from "--/services/messageService.js"
 
 function requiresLogin(request, response, next) {
     if (!request.session.user) return response.sendStatus(401)
@@ -28,10 +29,14 @@ response.json(oneChat)
 
 chatRoutes.get('/:id/messages', async (request, response) => {
 //beskeder i chatRoutes
+const messages = await getMessagesbyChat()
+return response.json(message.filter(m => m.chatId === request.params.id))
 })
 
 chatRoutes.get('/:id/messages/:messageID', async (request, response) => {
 //en besked
+const message = await getMessage(request.params.messageID)
+response.json(message)
 })
 
 chatRoutes.post('/', async (request, response) => {
