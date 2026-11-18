@@ -9,7 +9,7 @@ import {encrypt, decrypt} from './cryptoService.js'
 const messageConverter = {
     toFirestore: message => {
         return {
-            message: encrypt(message.text),
+            message: encrypt(message.message),
             owner: message.owner,
             chatId: message.chatId,
             createDate: message.createDate
