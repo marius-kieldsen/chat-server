@@ -20,10 +20,14 @@ response.json(oneChat)
 
 chatRoutes.get('/:id/messages', async (request, response) => {
 //beskeder i chatRoutes
+const messages = await getMessages()
+return response.json(message.filter(m => m.chatId === request.params.id))
 })
 
 chatRoutes.get('/:id/messages/:messageID', async (request, response) => {
 //en besked
+const message = await getMessage(request.params.messageID)
+response.json(message)
 })
 
 chatRoutes.post('/', async (request, response) => {
