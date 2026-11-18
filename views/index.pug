@@ -8,18 +8,19 @@ html(lang="da")
         h1 Chat Server
         //- … chatlisten …
         h2 Users
-            ul
-                each user in users
-                    li #{user.username} (#{user.id})
+        ul
+            each user in users
+                li #{user.username} (#{user.id})
 
         if user
-            p Logget ind som #{user.username}
+            p Logget ind som #{user.username} (niveau #{user.accessLevel})
+            button#logout Log ud!
         else
             form#login-form
                 input#username(type="text" placeholder="Brugernavn" required)
                 input#password(type="password" placeholder="Adgangskode" required)
                 button(type="submit") Log ind
-            p#fejl
+            p#loginFejl
 
             form#opret-form
                 input#opretUsername(type="text" placeholder="Brugernavn" required)
