@@ -2,7 +2,7 @@
 *.iml
 *.iws
 out/
-
+.github
 keys/
 *.pem
 
