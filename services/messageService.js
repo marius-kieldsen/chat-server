@@ -25,14 +25,19 @@ const messageConverter = {
 const messageCollection = collection(db, 'messages').withConverter(messageConverter)
 
 export async function createMessage(message) {
-
+    const ref = await addDoc(messageCollection, message)
+    return ref.id
 }
 export async function getMessage(id) {
-
+    const messageDoc = await getDoc(doc(messageCollection, id))
+    return messageDoc.data()
 }
-export async function getMessagesbyChat(chatId) {
-
+export async function getMessagesByChat(chatId) {
+    const snapshot = await getDocs(query(messageCollection, where('chatId', '==', chatId)))
+    return snapshot.docs.map(d => d.data())
 }
-export async function getMessagebyOwner(userId) {
 
+export async function getMessagesByUser(userId) {
+    const snapshot = await getDocs(query(messageCollection, where('owner', '==', userId)))
+    return snapshot.docs.map(d => d.data())
 }
