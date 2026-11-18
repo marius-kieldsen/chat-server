@@ -23,6 +23,7 @@ if (loginForm) {
         } else {
             const data = svar.json()
             document.querySelector('#loginFejl').textContent = data.error
+            console.log(data.error)
         }
     })
 }
@@ -63,6 +64,41 @@ if (logoutButton) {
         if(svar.ok) {
             console.log("Yay, logged out!!")
             location.reload()
+        }
+    })
+}
+
+const opretChatDialog = document.querySelector('#opret-chat-dialog')
+
+document.querySelector('#vis-opret-chat')?.addEventListener('click', () => {
+    opretChatDialog.showModal()
+})
+
+document.querySelector('#luk-dialog')?.addEventListener('click', () => {
+    opretChatDialog.close()
+})
+
+const opretChatForm = document.querySelector('#opret-chat-form')
+if (opretChatForm) {
+    console.log("Opret Chat Form fundet..")
+    opretChatForm.addEventListener('submit', async e => {
+        e.preventDefault()
+        console.log('Submitting create chat request...')
+
+        const chatName = document.querySelector('#chatName').value
+
+        const svar = await fetch('/chats', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chatName })
+        })
+
+        if (svar.ok) {
+            console.log("Chat created!")
+            location.reload()
+        } else {
+            const data = await svar.json()
+            alert(data.error)
         }
     })
 }
