@@ -14,8 +14,10 @@ if (!fs.existsSync('./privat_noegle.pem')) {
 const publicKey = fs.readFileSync('./offentlig_noegle.pem', 'utf-8')
 const privateKey = fs.readFileSync('./privat_noegle.pem', 'utf-8')
 
-const encrypted = crypto.publicEncrypt(publicKey, Buffer.from('Sensitive Data'))
-console.log('Encrypted:', encrypted.toString('base64'))
+export function encrypt(text) {
+    return crypto.publicEncrypt(publicKey, Buffer.from(text)).toString('base64')
+}
 
-const decrypted = crypto.privateDecrypt(privateKey, encrypted)
-console.log('Decrypted:', decrypted.toString())
+export function decrypt(encrypted) {
+    return crypto.privateDecrypt(privateKey, Buffer.from(encrypted, 'base64')).toString()
+}
