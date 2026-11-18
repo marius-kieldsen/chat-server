@@ -72,13 +72,4 @@ app.get('/test-chat', (request, response) => {
 
 
 
-
-
-
-
-
-
-
-
-
 app.listen(8000, () => console.log('Port åben: http://localhost:8000' ))
