@@ -1,12 +1,13 @@
 import {Router} from "express"
-import {getChat, createChat, deleteChat} from "../services/chatService.js"
+import {getChat, getChats, createChat, deleteChat} from "../services/chatService.js"
+import {Chat} from "../models/Chat.js"
 
 
 const chat = Router()
 
 chat.get('/', async (request, response) => {
 //alle chats
-const allChats = await getChat()
+const allChats = await getChats()
 response.json(allChats)
 })
 
@@ -21,16 +22,20 @@ chat.get('/:id/messages', async (request, response) => {
 //beskeder i chat
 })
 
-chat.get('/:id/message/:messageID', async (request, response) => {
+chat.get('/:id/messages/:messageID', async (request, response) => {
 //en besked
 })
 
 
 chat.post('/', async (request,response) => {
 //opret chat
-const newChat = new Chat(null, request.body.name, request.session.user.id)
+if (request.session.user) {
+const newChat = new Chat(null, request.body.name, request.session.user.id, new Date())
 const id = await createChat(newChat)
-
+response.status(201).json({id})
+} else {
+response.sendStatus(401)
+}
 })
 
 chat.put('/:id', async (request, response) => {
@@ -38,8 +43,21 @@ chat.put('/:id', async (request, response) => {
 })
 
 chat.delete('/:id', async (request, response) => {
-await deleteChat(request.params.id)
-response.sendStatus(204)
+    const user = request.session.user
+    if (!user) return response.sendStatus(401)
+
+    const oneChat = await getChat(request.params.id)
+    if (!oneChat) return response.sendStatus(404)
+
+    const level = Number(user.accessLevel)
+    const ejerSelv = oneChat.owner === user.id
+
+    if (level >= 3 || (level === 2 && ejerSelv)) {
+        await deleteChat(request.params.id)
+        return response.sendStatus(204)
+    }
+
+    response.sendStatus(403)
 })
 
 export {chat}

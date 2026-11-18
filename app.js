@@ -4,6 +4,7 @@ import {getUserByUsername, getUsers} from "./services/userService.js";
 import session from 'express-session'
 import {verifyPassword} from "./services/authService.js";
 import {chat} from './routes/chat.js'
+import {getChats} from"./services/chatService.js"
 
 const app = express()
 
@@ -22,8 +23,12 @@ app.use((request, response, next) => {
 })
 
 app.get('/', async (request, response) => {
+if (!request.session.user) {
     const allUsers = await getUsers()
-    response.render('index', { users: allUsers })
+    return response.render('index', { users: allUsers })
+    }
+    const chats = await getChats()
+    response.render('chat', {chats,user:request.session.user})
 })
 
 app.get('/login', async ( request, response) => {
@@ -49,6 +54,29 @@ app.post('/logout', (req, res) => {
 app.use('/users', users)
 
 app.use('/chats',chat)
+
+
+
+// MIDLERTIDIG – slet før aflevering
+app.get('/test-chat', (request, response) => {
+    const level = Number(request.query.level) || 0
+    const user = level ? { id: 'u1', username: 'test', accessLevel: level } : undefined
+    const chats = [
+        { id: 'c1', name: 'Julefrokost', owner: 'u1' },   // ejes af test-brugeren
+        { id: 'c2', name: 'Sommerfest', owner: 'u9' }     // ejes af en anden
+    ]
+    const users = [{ username: 'admin', accessLevel: 3 }]
+    response.render('chat', { chats, user, users })
+})
+
+
+
+
+
+
+
+
+
 
 
 

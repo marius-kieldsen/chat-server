@@ -1,10 +1,10 @@
 
 
-class Chat {
-    constructor(id, name, owner) {
+export class Chat {
+    constructor(id, name, owner, dateCreated = new Date()) {
         this.id = id    
         this.name = name
-        this.dateCreated = new Date()
+        this.dateCreated = dateCreated
         this.owner = owner
         this.messages = []
     }
