@@ -14,6 +14,8 @@ users.get('/add', (request, response) => {
   response.render('add')
 })
 
+
+
 users.get('/:id', async (request, response) => {
   const user = await getUser(request.params.id)
   response.json(user)
@@ -27,11 +29,11 @@ users.post('/', async (request, response) => {
   const { username, password, level } = request.body
 
   if (await getUserByUsername(username)) {
-    return response.status(409).send({ ok: false, error: 'Brugernavn findes allerede.'})
+    return response.status(409).send({error: 'Brugernavn findes allerede.'})
   }
 
   await createUser(new User(username, hashPassword(password), level))
-  response.status(201).send({ ok: true })
+  response.sendStatus(201)
 })
 
 export { users }

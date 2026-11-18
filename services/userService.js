@@ -17,7 +17,7 @@ const userConverter = {
 
     }
 }
-const userCollection = collection(db, "users").withConverter(userConverter);
+const userCollection = collection(db, "users").withConverter(userConverter)
 
 export async function createUser(user) {
     const ref = await addDoc(userCollection, user);
